@@ -1,0 +1,72 @@
+import requests
+
+#def in utils.py file
+capture_password()
+base36 converter function
+type_prefix:type mapping
+
+#def in api_classes.py
+class ApiClient(object):
+
+	def __init__(self, hostname):
+		self.hostname = hostname
+
+	def request(self):
+
+	def authenticate(self):
+		#stores auth cookie to use for any requests that must be authenticated
+
+	def login(self)
+
+class RedditUser(object)
+	__init__(self, username, password):
+		self.username
+		self.password
+		self.api_client = ApiClient('http://www.reddit.com')
+		self.fullname = self._get_fullname()
+
+	def get_fullname(self):
+		self.api_client.login()
+		modhash = self.api_client.request('GET', '/api/me.json', )
+
+	def get_comments(self):
+		self.comments = self.api_client.request('GET'...)
+
+	def edit_comments(self):
+		for comment in self.comments
+			comment = 'xxx'
+		for comment in self.comments:
+			api_client.request('PUT', 'url', comment)
+	def delete_comments(self):
+		for comment in self.comments:
+			api_client.request('DELETE', 'url', comment)
+
+	def delete_account(self):
+		api_client.request('DELETE', 'url')
+
+	def delete_self(self):
+		self.get_comments()
+		self.edit_comments()
+		self.delete_comments()
+		self.delete_account()
+
+#main.py
+#python reddit_delete.py -u username
+#brings up password capture terminal
+import argparse
+
+def read_args():
+	arg_parse.register_argument('-u', '--username', ..)
+	arg_parse.register_option('-v', '--verbose', ..)
+	parsed_args = vars(arg_parse.evaluate())
+	return parsed_args()
+
+if '__name__' == 'main':
+	arguments = read_args() #both exit on failure
+	capture_password() #both exit on failure
+	username = arguments['username']
+	is_verbose = False
+	if verbose in arguments:
+		is_verbose = True
+	reddit_user = RedditUser(username, password)
+	reddit_user.delete_self()
