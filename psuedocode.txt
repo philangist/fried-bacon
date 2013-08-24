@@ -58,8 +58,5 @@ if '__name__' == 'main':
 	arguments = read_args() #both exit on failure
 	capture_password() #both exit on failure
 	username = arguments['username']
-	is_verbose = False
-	if verbose in arguments:
-		is_verbose = True
 	reddit_user = RedditUser(username, password)
 	reddit_user.delete_self()
