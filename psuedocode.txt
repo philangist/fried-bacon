@@ -53,13 +53,6 @@ class RedditUser(object)
 #main.py
 #python reddit_delete.py -u username
 #brings up password capture terminal
-import argparse
-
-def read_args():
-	arg_parse.register_argument('-u', '--username', ..)
-	arg_parse.register_option('-v', '--verbose', ..)
-	parsed_args = vars(arg_parse.evaluate())
-	return parsed_args()
 
 if '__name__' == 'main':
 	arguments = read_args() #both exit on failure
