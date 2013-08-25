@@ -1,15 +1,24 @@
 import utils
 import json
-import time
-from api_client import RedditAPIClient
+from reddit import (
+	RedditAPIClient,
+	RedditUser,
+)
+
+AUTH_ERROR_MESSAGE = """Your account could not be authenticated. Please ensure
+that your provided credentials are correct and that Reddit's API is not being
+a complete bitch."""
 
 if __name__ == '__main__':
 	auth_info = utils.get_auth_info()
 	username, password = auth_info['username'], auth_info['password']
-	reddit_api_client = RedditAPIClient(username, password)
-	login = reddit_api_client.api_request('POST', '/api/login')
-	time.sleep(2)
-	print login
-	me = reddit_api_client.api_request('GET', '/api/me.json')
-	time.sleep(2)
-	print me
+	reddit_user = RedditUser(username, password)
+	if reddit_user.login():
+		reddit_user.download_self()
+		print 'Submitted Posts: \n %s \n Comments: \n %s' % (
+			str(reddit_user._posts),
+			str(reddit_user._comments),
+		)
+
+	else:
+		print AUTH_ERROR_MESSAGE
