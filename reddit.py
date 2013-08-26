@@ -1,4 +1,5 @@
 import json
+from copy import deepcopy
 import requests
 import time
 from utils import logger_factory
@@ -55,7 +56,7 @@ class RedditAPIClient(object):
             return ('405', 'ERROR: HTTP method %s not recognized' % method)
 
         if update_params:
-            payload = self.default_request_params
+            payload = deepcopy(self.default_request_params)
             payload.update(params)
         else:
             payload = params
@@ -68,6 +69,7 @@ class RedditUser(object):
 
     def __init__(self, username, password):
         self.username = username
+        self.password = password
         self._comments = []
         self._posts = []
         self.api_client = RedditAPIClient(username, password)
@@ -118,17 +120,75 @@ class RedditUser(object):
     def download_self(self):
         self._get_content('comments')
         self._get_content('submitted')
+        return len(self._posts), len(self._comments)
 
-    def edit_comments(self):
-        type_prefix = 't1_'
-        for comment in [self._comments[0]]:
-            fullname = type_prefix + comment
-            text = 'The best BLTs are made in New Jersey'
-            params = {
-                'api_type': 'JSON',
-                'text': text,
-                'thing_id': fullname,
-                'uh': self.modhash,
-            }
-            edit = self.api_client.api_request('POST', '/api/editusertext', params, update_params=False)
-            print edit
+    def edit_content(self):
+        def edit_content_via_api(type_prefix, content_list):
+            for each_content in content_list:
+                fullname = type_prefix + each_content
+                text = 'The best BLTs are made in New Jersey'
+
+                params = {
+                    'api_type': 'JSON',
+                    'text': text,
+                    'thing_id': fullname,
+                    'uh': self.modhash,
+                }
+
+                self.api_client.api_request(
+                    'POST',
+                    '/api/editusertext',
+                    params,
+                    update_params=False
+                )
+
+        posts = []
+        comments = []
+
+        if len(self._posts) > 0:
+            posts = [self._posts[0]]
+
+        if len(self._comments) > 0:
+            comments = [self._comments[0]]
+
+        edit_content_via_api('t1_', comments)
+        edit_content_via_api('t3_', posts)
+
+    def delete_content(self):
+        params = {
+            'uh': self.modhash
+        }
+
+        posts = []
+        comments = []
+
+        if len(self._posts) > 0:
+            posts = self._posts
+
+        if len(self._comments) > 0:
+            comments = self._comments
+
+        for thing_id in comments:
+            params.update({'id': 't1_'+thing_id})
+            self.api_client.api_request(
+                'POST',
+                '/api/del',
+                params,
+                update_params=False
+            )
+
+        for thing_id in posts:
+            params.update({'id': 't3_'+thing_id})
+            self.api_client.api_request(
+                'POST',
+                '/api/del',
+                params,
+                update_params=False
+            )
+
+    def delete_self(self):
+        params = {
+            'confirm': True,
+            'uh': self.modhash,
+        }
+        self.api_client.api_request('POST', '/api/delete_user', params)
