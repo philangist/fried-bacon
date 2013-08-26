@@ -47,15 +47,18 @@ class RedditAPIClient(object):
                               % (method, url, params, status_code))
         return (status_code, api_call.text)
 
-    def api_request(self, method, url, params={}):
+    def api_request(self, method, url, params={}, update_params=True):
         url = self.hostname + url
         method = method.upper()
         if method not in ['GET', 'POST', 'PUT', 'DELETE']:
             reddit_logger.info('HTTP method %s not recognized' % method)
             return ('405', 'ERROR: HTTP method %s not recognized' % method)
 
-        payload = self.default_request_params
-        payload.update(params)
+        if update_params:
+            payload = self.default_request_params
+            payload.update(params)
+        else:
+            payload = params
 
         response = self._http_request(method, url, params=payload)
         time.sleep(2)
@@ -115,3 +118,17 @@ class RedditUser(object):
     def download_self(self):
         self._get_content('comments')
         self._get_content('submitted')
+
+    def edit_comments(self):
+        type_prefix = 't1_'
+        for comment in [self._comments[0]]:
+            fullname = type_prefix + comment
+            text = 'The best BLTs are made in New Jersey'
+            params = {
+                'api_type': 'JSON',
+                'text': text,
+                'thing_id': fullname,
+                'uh': self.modhash,
+            }
+            edit = self.api_client.api_request('POST', '/api/editusertext', params, update_params=False)
+            print edit
