@@ -146,10 +146,10 @@ class RedditUser(object):
         comments = []
 
         if len(self._posts) > 0:
-            posts = [self._posts[0]]
+            posts = self._posts
 
         if len(self._comments) > 0:
-            comments = [self._comments[0]]
+            comments = self._comments
 
         edit_content_via_api('t1_', comments)
         edit_content_via_api('t3_', posts)
