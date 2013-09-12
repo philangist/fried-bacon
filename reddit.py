@@ -36,16 +36,16 @@ class RedditAPIClient(object):
 
         if status_code >= 400:
             reddit_logger.info(
-                'The %s request for url: %s with params: %s '
+                'The %s request for url: %s '
                 'failed with error code: %s'
-                % (method, url, params, status_code))
+                % (method, url, status_code))
             return (status_code,
                     'ERROR: Invalid HTTP method %s for url: %s with params: %s'
                     % (method, url, params))
         reddit_logger.info('%s call made to endpoint \'%s\''
-                              ' with params %s successfully. status'
+                              'successfully. Status'
                               ' code returned: %s'
-                              % (method, url, params, status_code))
+                              % (method, url, status_code))
         return (status_code, api_call.text)
 
     def api_request(self, method, url, params={}, update_params=True):
