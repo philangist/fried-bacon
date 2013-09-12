@@ -8,11 +8,13 @@ from reddit import (
 
 AUTH_ERROR_MESSAGE = """Your account could not be authenticated. Please ensure
 that your provided credentials are correct/ It's also possible that Reddit's API
-is being a complete bitch. Try again in a few minutes"""
+is rate limiting. Try again in a few minutes"""
 
 if __name__ == '__main__':
 	auth_info = utils.get_auth_info()
 	username, password = auth_info['username'], auth_info['password']
+	delete_content = auth_info.get('content_delete')
+	delete_self = auth_info.get('self_delete')
 	reddit_user = RedditUser(username, password)
 	print 'Connecting to Reddit...'
 	if reddit_user.login():
@@ -25,10 +27,12 @@ if __name__ == '__main__':
 		print 'Found %d submitted comments' % download[1]
 		print 'Editing comments and self posts (This might take a few minutes)'
 		reddit_user.edit_content()
-		#print 'Deleting comments and self posts (We\'re almost done!)''
-		#reddit_user.delete_content()
-		#print 'Deleting self'
-		#reddit_user.delete_self()
+		if delete_content:
+			print 'Deleting comments and self posts (We\'re almost done!)'
+			reddit_user.delete_content()
+		if delete_self:
+			print 'Deleting account'
+			reddit_user.delete_self()
 		print 'Done!'
 	else:
 		print AUTH_ERROR_MESSAGE

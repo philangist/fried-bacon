@@ -7,8 +7,10 @@ def get_auth_info():
 	parser = ArgumentParser(description='Bulk edit all your Reddit comments'
 										'nonsense and delete your account')
 	parser.add_argument('-u', '--username', required=True)
-	password = getpass()
+	parser.add_argument('-c', '--content-delete', action='store_true', default=False)
+	parser.add_argument('-s', '--self-delete', action='store_true', default=False)
 	auth_info = vars(parser.parse_args())
+	password = getpass()
 	auth_info['password'] = password
 	return auth_info
 
