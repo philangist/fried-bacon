@@ -1,8 +1,7 @@
 Fried Bacon
 ===========
 
-A tool to batch modify and delete your activity on Reddit. To protect you from  
-your ex-girlfriend, the hivemind, and possibly the NSA (not really).
+A tool to batch modify and delete your activity on Reddit. To protect you from your crazy ex-girlfriend, the Reddit hivemind, and possibly the NSA (not really).
 
 python fried_bacon.py -u - (username) -additional flags  
 
